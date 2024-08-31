@@ -47,4 +47,4 @@ RUN set -x \
     # all ok
     && echo "All done."
 
-
+WORKDIR /tooling
