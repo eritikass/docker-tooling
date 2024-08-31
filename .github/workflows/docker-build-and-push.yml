@@ -1,5 +1,5 @@
 ---
-name: ci
+name: 'Docker build and push'
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ on:
     branches: [master, '*']
 
 jobs:
-  build_and_push:
+  docker_build_and_push:
     uses: sdr-enthusiasts/common-github-workflows/.github/workflows/build_and_push_image.yml@main
     with:
       push_enabled: true
