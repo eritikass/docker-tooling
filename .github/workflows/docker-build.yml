@@ -11,12 +11,13 @@ jobs:
     uses: sdr-enthusiasts/common-github-workflows/.github/workflows/build_and_push_image.yml@main
     with:
       push_enabled: true
-      push_destinations: ghcr.io;dockerhub
-      ghcr_repo_owner: ${{ github.repository_owner }}
-      ghcr_repo: ${{ github.repository }}
+      # push_destinations: ghcr.io;dockerhub
+      push_destinations: dockerhub
+      # ghcr_repo_owner: ${{ github.repository_owner }}
+      # ghcr_repo: ${{ github.repository }}
       dockerhub_profile: eritikass
       dockerhub_repo: tooling
       get_version_method: git_commit_hash_short
     secrets:
-      ghcr_token: ${{ secrets.GITHUB_TOKEN }}
+      # ghcr_token: ${{ secrets.GITHUB_TOKEN }}
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}

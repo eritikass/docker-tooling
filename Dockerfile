@@ -6,6 +6,8 @@ ENV LC_ALL=C.UTF-8 \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+COPY /scripts /scripts
+
 RUN set -x \
     # Install packages
     && apt-get update -y \
@@ -49,4 +51,3 @@ RUN set -x \
     && echo "All done."
 
 
-COPY /scripts /scripts
