@@ -22,14 +22,6 @@ curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr
 chmod a+x /usr/local/bin/yt-dlp
 yt-dlp --version
 
-# install Github CLI
-echo " ***** install Github CLI *****"
-curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-apt-get update -y
-apt-get install gh -y
-
 # install yq
 echo " ***** install yq *****"
 export YQ_VERSION=3.4.1
