@@ -42,11 +42,8 @@ RUN set -x \
     && mkdir -p /config \
     # Clean-up
     && rm -rf /var/lib/apt/lists/* /tmp/* /src \
-    # Document version
-    && mkdir -p /versions \
-    && yt-dlp --version > /versions/yt-dlp.txt \
-    && ffmpeg -version > /versions/ffmpeg.txt \
-    && date > /IMAGE_VERSION \
+    # Move custom scripts to path
+    && bash /scripts/move-to-path.sh \
     # all ok
     && echo "All done."
 
