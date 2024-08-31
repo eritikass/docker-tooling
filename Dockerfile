@@ -7,6 +7,7 @@ ENV LC_ALL=C.UTF-8 \
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 COPY /scripts /scripts
+COPY /custom.sh /tmp/custom.sh
 
 RUN set -x \
     # Install packages
@@ -21,29 +22,30 @@ RUN set -x \
         curl \
         ffmpeg \
         git \
+        jq \
         locales \
         locales-all \
         make \
         mpv \
         pandoc \
+        pkg-config \
         python-is-python3 \
         python3 \
         python3-dev \
         python3-pip \
         python3-pyxattr \
         rtmpdump \
+        sudo \
         vim \
+        wget \
         zip \
     && git config --global advice.detachedHead false \
-    # Install yt-dlp via curl
-    && curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp \
-    && chmod a+x /usr/local/bin/yt-dlp \
     # Create /config directory
     && mkdir -p /config \
+    # Run custom script
+    && bash /tmp/custom.sh \
     # Clean-up
     && rm -rf /var/lib/apt/lists/* /tmp/* /src \
-    # Move custom scripts to path
-    && bash /scripts/move-to-path.sh \
     # all ok
     && echo "All done."
 
