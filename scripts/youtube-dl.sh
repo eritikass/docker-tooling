@@ -1,0 +1,74 @@
+#!/bin/bash
+
+# Create dockeruser homedir
+mkdir -p /home/dockeruser
+
+# Create symlinks for files/dirs under /config
+
+# if /config/yt-dlp.conf exists, symlink to /etc/yt-dlp.conf
+if [[ -e "/config/yt-dlp.conf" ]]; then
+    # if the symlink already exists, remove it
+    if [[ -L "/etc/yt-dlp.conf" ]]; then
+        rm -v "/etc/yt-dlp.conf"
+    fi
+    # create symlink
+    ln -vs "/config/yt-dlp.conf" "/etc/yt-dlp.conf" > /dev/null 2>&1 || true
+fi
+
+# if /config/.netrc exists, symlink to /home/dockeruser/.netrc
+if [[ -e "/config/.netrc" ]]; then
+    # if the symlink already exists, remove it
+    if [[ -L "/home/dockeruser/.netrc" ]]; then
+        rm -v "/home/dockeruser/.netrc"
+    fi
+    # create symlink
+    ln -vs "/config/.netrc" "/home/dockeruser/.netrc" > /dev/null 2>&1 || true
+fi
+
+# if /config/.cache exists, symlink to /home/dockeruser/.cache
+if [[ -d "/config/.cache" ]]; then
+    # if the symlink already exists, remove it
+    if [[ -L "/home/dockeruser/.cache/youtube-dl" && -d "/home/dockeruser/.cache/youtube-dl" ]]; then
+        rm -v "/home/dockeruser/.cache/youtube-dl"
+    fi
+    # create symlink
+    mkdir -p "/home/dockeruser/.cache"
+    ln -vs /config/.cache "/home/dockeruser/.cache/youtube-dl"
+fi
+
+# if user has requested UPDATE_YOUTUBE_DL, then update youtube-dl
+if [[ -n "$UPDATE_YOUTUBE_DL" ]]; then
+    echo "Attempting update of youtube-dl"
+    python3 -m pip install --upgrade --no-cache-dir yt-dlp 2>&1 | grep -v WARNING
+fi
+
+# Set UID/PID of user that youtube-dl will be run as
+YOUTUBEDLPGID=${PGID:-1000}
+YOUTUBEDLPUID=${PUID:-1000}
+
+# Check to see if group/user already exist, if so, delete
+EXISTINGGROUPNAME=$(getent group "$YOUTUBEDLPGID" | cut -d ':' -f 1)
+EXISTINGUSERNAME=$(getent passwd "$YOUTUBEDLPUID" | cut -d ':' -f 1)
+if [[ -n "$EXISTINGGROUPNAME" ]]; then
+    groupdel -f "$EXISTINGGROUPNAME"
+fi
+if [[ -n "$EXISTINGUSERNAME" ]]; then
+    userdel -f "$EXISTINGUSERNAME"
+fi
+
+# Create user/group
+addgroup --quiet --gid "$YOUTUBEDLPGID" dockeruser
+chown -R "$YOUTUBEDLPUID":"$YOUTUBEDLPGID" /home/dockeruser
+adduser --quiet --system --disabled-password --uid "$YOUTUBEDLPUID" --gid "$YOUTUBEDLPGID" --home /home/dockeruser dockeruser
+chown -R "$YOUTUBEDLPUID":"$YOUTUBEDLPGID" /usr/local/bin/yt-dlp
+chmod u+s /usr/local/bin/yt-dlp
+HOME=/home/dockeruser
+export HOME
+
+# Set UMASK if required
+if [[ -n "$UMASK" ]]; then
+    umask "$UMASK"
+fi
+
+# Run youtube-dlc with remainder of command line arguments
+setpriv --reuid dockeruser --regid dockeruser --keep-groups python3 /usr/local/bin/yt-dlp "$@"
