@@ -44,6 +44,7 @@ RUN set -x \
     && mkdir -p /versions \
     && yt-dlp --version > /versions/yt-dlp.txt \
     && ffmpeg -version > /versions/ffmpeg.txt \
+    && date > /IMAGE_VERSION \
     # all ok
     && echo "All done."
 
