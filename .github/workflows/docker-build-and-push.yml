@@ -7,9 +7,12 @@ on:
     branches: [master, '*']
 
 jobs:
-  docker_build_and_push:
+  tooling_docker_build_and_push:
     uses: sdr-enthusiasts/common-github-workflows/.github/workflows/build_and_push_image.yml@main
     with:
+      docker_build_context: "tooling"
+      docker_build_file: "tooling/Dockerfile"
+      docker_latest_tag: "tooling"
       push_enabled: true
       # push_destinations: ghcr.io;dockerhub
       push_destinations: dockerhub
