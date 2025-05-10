@@ -19,6 +19,7 @@ RUN set -x \
         bash \
         build-essential \
         ca-certificates \
+        cadaver \
         curl \
         ffmpeg \
         git \
