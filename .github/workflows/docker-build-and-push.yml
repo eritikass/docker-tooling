@@ -7,7 +7,28 @@ on:
     branches: [master, '*']
 
 jobs:
+  test_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Test nginx-dir-listing image (nginx.config)
+        run: |
+          cd ./nginx-dir-listing
+          docker build -t nginx-dir-listing .
+          docker run --rm -d -p 80:80 nginx-dir-listing
+          sleep 5
+          curl -f http://localhost:80/___test__me_fooo_boo || exit 1 
+          output=$(curl -s http://localhost:80/___test__me_fooo_boo)
+          if [[ "$output" != "foo-boo-ok-test-response" ]]; then
+            echo -e "\nTest failed: $output"
+            exit 1
+          fi
+          echo -e "\nTest passed: '$output'"
+
   tooling_docker_build_and_push:
+    needs: test_job
     uses: sdr-enthusiasts/common-github-workflows/.github/workflows/build_and_push_image.yml@main
     with:
       docker_build_context: "tooling"
@@ -27,6 +48,7 @@ jobs:
 
 
   nginx_dir_listing_docker_build_and_push:
+    needs: test_job
     uses: sdr-enthusiasts/common-github-workflows/.github/workflows/build_and_push_image.yml@main
     with:
       docker_build_context: "nginx-dir-listing"
