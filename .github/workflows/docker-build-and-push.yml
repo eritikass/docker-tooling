@@ -63,14 +63,12 @@ jobs:
           set -xe
           cd ./tooling
           docker build -t tooling-image .
-          docker run --name tooling-name --rm -d tooling-image
           docker images
-          sleep 10
-          docker ps -a
-          docker exec -it tooling-name sh -c 'uname -m'
-          docker exec -it tooling-name sh -c 'gojq --version'
-          docker exec -it tooling-name sh -c 'gojq --version'
-          docker exec -it tooling-name sh -c 'yq_v4 --version'
+          # run some test commands
+          docker run --rm -it tooling-image date
+          docker run --rm -it tooling-image sh -c 'uname -m'
+          docker run --rm -it tooling-image bash -c 'gojq --version'
+          docker run --rm -it tooling-image yq_v4 --version
 
 
   tooling_docker_build_and_push:
