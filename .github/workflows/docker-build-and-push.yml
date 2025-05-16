@@ -22,6 +22,7 @@ jobs:
           docker build -t nginx-dir-listing .
           echo "test-me-123" > /tmp/test-me-123.txt
           docker run --rm -d -p 80:80 -v "/tmp/test-me-123.txt:/usr/share/nginx/html/test-me-123.txt" nginx-dir-listing
+          docker images
           sleep 5
 
           curl -f http://localhost:80/___test__me_fooo_boo || exit 1 
@@ -52,7 +53,25 @@ jobs:
 
           # openspeedtest upload handler
           curl -v http://localhost:80/openspeedtest/upload
-          curl -f http://localhost:80/openspeedtest/upload || exit 1 
+          curl -f http://localhost:80/openspeedtest/upload || exit 1
+
+          docker ps -a 
+
+      - name: Test tooling image
+
+        run: |
+          set -xe
+          cd ./tooling
+          docker build -t tooling-image .
+          docker run --name tooling-name --rm -d tooling-image
+          docker images
+          sleep 10
+          docker ps -a
+          docker exec -it tooling-name sh -c 'uname -m'
+          docker exec -it tooling-name sh -c 'gojq --version'
+          docker exec -it tooling-name sh -c 'gojq --version'
+          docker exec -it tooling-name sh -c 'yq_v4 --version'
+
 
   tooling_docker_build_and_push:
     needs: test_job
