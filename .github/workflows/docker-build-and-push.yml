@@ -23,21 +23,31 @@ jobs:
           echo "test-me-123" > /tmp/test-me-123.txt
           docker run --rm -d -p 80:80 -v "/tmp/test-me-123.txt:/usr/share/nginx/html/test-me-123.txt" nginx-dir-listing
           sleep 5
+
           curl -f http://localhost:80/___test__me_fooo_boo || exit 1 
-          output=$(curl -s http://localhost:80/___test__me_fooo_boo)
-          if [[ "$output" != "foo-boo-ok-test-response" ]]; then
-            echo -e "\nTest failed: $output"
+          output_nginx_location=$(curl -s http://localhost:80/___test__me_fooo_boo)
+          if [[ "$output_nginx_location" != "foo-boo-ok-test-response" ]]; then
+            echo -e "\nTest failed(nginx-location): $output_nginx_location"
             exit 1
           fi
-          echo -e "\nTest passed: '$output'"
+          echo -e "\nTest passed(nginx-location): '$output_nginx_location'"
 
           curl -v -f http://localhost:80/test-me-123.txt || exit 1
-          output=$(curl -s http://localhost:80/test-me-123.txt) 
-          if [[ "$output" != "test-me-123" ]]; then
-            echo -e "\nTest failed: $output"
+          output_test_me_123_txt=$(curl -s http://localhost:80/test-me-123.txt) 
+          if [[ "$output_test_me_123_txt" != "test-me-123" ]]; then
+            echo -e "\nTest failed(test-me-123.txt): $output_test_me_123_txt"
             exit 1
           fi
-          echo -e "\nTest passed: '$output'"
+          echo -e "\nTest passed(test-me-123.txt): '$output_test_me_123_txt'"
+
+          # test listing works
+          curl -v -f http://localhost:80/ || exit 1
+          output_dir_listing=$(curl -s http://localhost:80/)
+          if [[ "$output_dir_listing" != *"test-me-123.txt"* ]]; then
+            echo -e "\nTest failed(dir-listing): $output_dir_listing"
+            exit 1
+          fi
+          echo -e "\nTest passed(dir-listing): '$output_dir_listing'"
 
   tooling_docker_build_and_push:
     needs: test_job
