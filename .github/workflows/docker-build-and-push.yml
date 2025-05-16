@@ -49,6 +49,11 @@ jobs:
           fi
           echo -e "\nTest passed(dir-listing): '$output_dir_listing'"
 
+
+          # openspeedtest upload handler
+          curl -v http://localhost:80/openspeedtest/upload
+          curl -f http://localhost:80/openspeedtest/upload || exit 1 
+
   tooling_docker_build_and_push:
     needs: test_job
     uses: sdr-enthusiasts/common-github-workflows/.github/workflows/build_and_push_image.yml@main
