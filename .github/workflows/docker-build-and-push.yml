@@ -17,13 +17,23 @@ jobs:
   
       - name: Test nginx-dir-listing image (nginx.config)
         run: |
+          set -xe
           cd ./nginx-dir-listing
           docker build -t nginx-dir-listing .
-          docker run --rm -d -p 80:80 nginx-dir-listing
+          echo "test-me-123" > /tmp/test-me-123.txt
+          docker run --rm -d -p 80:80 -v "/tmp/test-me-123.txt:/usr/share/nginx/html/test-me-123.txt" nginx-dir-listing
           sleep 5
           curl -f http://localhost:80/___test__me_fooo_boo || exit 1 
           output=$(curl -s http://localhost:80/___test__me_fooo_boo)
           if [[ "$output" != "foo-boo-ok-test-response" ]]; then
+            echo -e "\nTest failed: $output"
+            exit 1
+          fi
+          echo -e "\nTest passed: '$output'"
+
+          curl -v -f http://localhost:80/test-me-123.txt || exit 1
+          output=$(curl -s http://localhost:80/test-me-123.txt) 
+          if [[ "$output" != "test-me-123" ]]; then
             echo -e "\nTest failed: $output"
             exit 1
           fi
