@@ -13,6 +13,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - run: uname -m
+  
       - name: Test nginx-dir-listing image (nginx.config)
         run: |
           cd ./nginx-dir-listing
