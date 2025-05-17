@@ -69,6 +69,18 @@ jobs:
           fi
           echo -e "\nTest passed(dir-listing-api-json)[isDirectory]: '$testingDataFileXmlIsDirectory'"
 
+
+          # test listing works (API w.depth, json)
+          curl -v -f http://localhost:80/___api/listing?path=.&depth=4 || exit 1
+          output_dir_listing_json_depth=$(curl -s http://localhost:80/___api/listing?path=.&depth=4)
+          echo "$output_dir_listing_json_depth" | jq
+
+          if [[ "$output_dir_listing_json_depth" != *"testing-data-file.xml"* ]]; then
+            echo -e "\nTest failed(dir-listing-api-json)[listed.w.depth]: $output_dir_listing_json"
+            exit 1
+          fi
+          echo -e "\nTest passed(dir-listing-api-json)[listed.w.depth]: '$output_dir_listing_json_depth'"
+
           # openspeedtest upload handler
           curl -v http://localhost:80/openspeedtest/upload
           curl -f http://localhost:80/openspeedtest/upload || exit 1
@@ -91,6 +103,7 @@ jobs:
 
   tooling_docker_build_and_push:
     needs: test_job
+    # https://github.com/sdr-enthusiasts/common-github-workflows/blob/main/.github/workflows/build_and_push_image.yml
     uses: sdr-enthusiasts/common-github-workflows/.github/workflows/build_and_push_image.yml@main
     with:
       docker_build_context: "tooling"
@@ -119,6 +132,7 @@ jobs:
 
   nginx_dir_listing_docker_build_and_push:
     needs: test_job
+    # https://github.com/sdr-enthusiasts/common-github-workflows/blob/main/.github/workflows/build_and_push_image.yml
     uses: sdr-enthusiasts/common-github-workflows/.github/workflows/build_and_push_image.yml@main
     with:
       docker_build_context: "nginx-dir-listing"
