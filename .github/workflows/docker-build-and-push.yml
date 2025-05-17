@@ -93,7 +93,6 @@ jobs:
     needs: test_job
     uses: sdr-enthusiasts/common-github-workflows/.github/workflows/build_and_push_image.yml@main
     with:
-      <<: *build-shared-settings
       docker_build_context: "tooling"
       docker_build_file: "tooling/Dockerfile"
       docker_latest_tag: "tooling"
