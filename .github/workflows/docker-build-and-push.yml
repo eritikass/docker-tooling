@@ -46,9 +46,15 @@ jobs:
           echo -e "\nTest passed(dir-listing-html): '$output_dir_listing_html'"
 
           # test listing works (API, json)
-          curl -v -f /___api/listing?path=foo_booo || exit 1
-          output_dir_listing_json=$(curl -s /___api/listing?path=foo_booo)
+          curl -v -f http://localhost:80/___api/listing?path= || exit 1
+          curl -v -f http://localhost:80/___api/listing?path=_tmp || exit 1
+          curl -v -f http://localhost:80/___api/listing?path=_tmp/foo_booo || exit 1
+          output_dir_listing_json=$(curl -s http://localhost:80/___api/listing?path=_tmp/foo_booo)
           if [[ "$output_dir_listing_json" != *"testing-data-file.xml"* ]]; then
+            echo -e "\nTest failed(dir-listing-api-json): $output_dir_listing_json"
+            exit 1
+          fi
+          if [[ "$output_dir_listing_json" != *"/usr/share/nginx/html/_tmp/foo_booo/testing-data-file.xml"* ]]; then
             echo -e "\nTest failed(dir-listing-api-json): $output_dir_listing_json"
             exit 1
           fi
