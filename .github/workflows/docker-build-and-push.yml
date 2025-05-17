@@ -50,11 +50,24 @@ jobs:
           curl -v -f http://localhost:80/___api/listing?path=_tmp || exit 1
           curl -v -f http://localhost:80/___api/listing?path=_tmp/foo_booo || exit 1
           output_dir_listing_json=$(curl -s http://localhost:80/___api/listing?path=_tmp/foo_booo)
+          echo "$output_dir_listing_json" | jq
+
           if [[ "$output_dir_listing_json" != *"testing-data-file.xml"* ]]; then
-            echo -e "\nTest failed(dir-listing-api-json): $output_dir_listing_json"
+            echo -e "\nTest failed(dir-listing-api-json)[listed]: $output_dir_listing_json"
             exit 1
           fi
-          echo -e "\nTest passed(dir-listing-api-json): '$output_dir_listing_json'"
+          echo -e "\nTest passed(dir-listing-api-json)[listed]: '$output_dir_listing_json'"
+
+          // check .files["testing-data-file.xml"].isDirectory = false
+          testingDataFileXml=$(echo "$output_dir_listing_json" | jq -r '.files["testing-data-file.xml"]')
+          echo "$testingDataFileXml" | jq
+          testingDataFileXmlIsDirectory=$(echo "$testingDataFileXml" | jq -r '.isDirectory')
+          // test if .isDirectory is false
+          if [[ "$testingDataFileXmlIsDirectory" != "false" ]]; then
+            echo -e "\nTest failed(dir-listing-api-json)[isDirectory]: $testingDataFileXmlIsDirectory"
+            exit 1
+          fi
+          echo -e "\nTest passed(dir-listing-api-json)[isDirectory]: '$output_dir_listing_json'"
 
           # openspeedtest upload handler
           curl -v http://localhost:80/openspeedtest/upload
