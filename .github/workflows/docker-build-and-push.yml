@@ -6,21 +6,6 @@ on:
   push:
     branches: [master, '*']
 
-x-build-shared-settings: &build-shared-settings
-      push_enabled: true
-      # push_destinations: ghcr.io;dockerhub
-      push_destinations: dockerhub
-      # ghcr_repo_owner: ${{ github.repository_owner }}
-      # ghcr_repo: ${{ github.repository }}
-      dockerhub_profile: eritikass
-      dockerhub_repo: tooling
-      get_version_method: git_commit_hash_short
-      platform_linux_arm32v6_enabled: false
-      platform_linux_arm32v7_enabled: false
-      platform_linux_arm64v8_enabled: true
-      platform_linux_amd64_enabled: true
-      platform_linux_i386_enabled: false
-
 jobs:
   test_job:
     runs-on: ubuntu-latest
@@ -112,6 +97,22 @@ jobs:
       docker_build_context: "tooling"
       docker_build_file: "tooling/Dockerfile"
       docker_latest_tag: "tooling"
+      #
+      # SHARED SETTINGS
+      #
+      push_enabled: true
+      # push_destinations: ghcr.io;dockerhub
+      push_destinations: dockerhub
+      # ghcr_repo_owner: ${{ github.repository_owner }}
+      # ghcr_repo: ${{ github.repository }}
+      dockerhub_profile: eritikass
+      dockerhub_repo: tooling
+      get_version_method: git_commit_hash_short
+      platform_linux_arm32v6_enabled: false
+      platform_linux_arm32v7_enabled: false
+      platform_linux_arm64v8_enabled: true
+      platform_linux_amd64_enabled: true
+      platform_linux_i386_enabled: false
     secrets:
       # ghcr_token: ${{ secrets.GITHUB_TOKEN }}
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -121,10 +122,25 @@ jobs:
     needs: test_job
     uses: sdr-enthusiasts/common-github-workflows/.github/workflows/build_and_push_image.yml@main
     with:
-      <<: *build-shared-settings
       docker_build_context: "nginx-dir-listing"
       docker_build_file: "nginx-dir-listing/Dockerfile"
       docker_latest_tag: "nginx-dir-listing"
+      #
+      # SHARED SETTINGS
+      #
+      push_enabled: true
+      # push_destinations: ghcr.io;dockerhub
+      push_destinations: dockerhub
+      # ghcr_repo_owner: ${{ github.repository_owner }}
+      # ghcr_repo: ${{ github.repository }}
+      dockerhub_profile: eritikass
+      dockerhub_repo: tooling
+      get_version_method: git_commit_hash_short
+      platform_linux_arm32v6_enabled: false
+      platform_linux_arm32v7_enabled: false
+      platform_linux_arm64v8_enabled: true
+      platform_linux_amd64_enabled: true
+      platform_linux_i386_enabled: false../.github/workflows/docker-build-and-push.yml
     secrets:
       # ghcr_token: ${{ secrets.GITHUB_TOKEN }}
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
