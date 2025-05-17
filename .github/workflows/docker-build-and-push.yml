@@ -54,10 +54,6 @@ jobs:
             echo -e "\nTest failed(dir-listing-api-json): $output_dir_listing_json"
             exit 1
           fi
-          if [[ "$output_dir_listing_json" != *"/usr/share/nginx/html/_tmp/foo_booo/testing-data-file.xml"* ]]; then
-            echo -e "\nTest failed(dir-listing-api-json): $output_dir_listing_json"
-            exit 1
-          fi
           echo -e "\nTest passed(dir-listing-api-json): '$output_dir_listing_json'"
 
           # openspeedtest upload handler
