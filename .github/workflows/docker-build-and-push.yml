@@ -20,8 +20,11 @@ jobs:
           set -xe
           cd ./nginx-dir-listing
           docker build -t nginx-dir-listing .
+          docker run --rm nginx-dir-listing node --version
           echo "test-me-123" > /tmp/test-me-123.txt
-          docker run --rm -d -p 80:80 -v "/tmp/test-me-123.txt:/usr/share/nginx/html/test-me-123.txt" nginx-dir-listing
+          mkdir -p /tmp/foo_booo
+          echo "<aa></aa>" > /tmp/foo_booo/testing-data-file.xml
+          docker run --rm -d -p 80:80 -v "/tmp/test-me-123.txt:/usr/share/nginx/html/test-me-123.txt" -v "/tmp/:/usr/share/nginx/html/_tmp" nginx-dir-listing
           docker images
           sleep 5
 
@@ -33,15 +36,23 @@ jobs:
           fi
           echo -e "\nTest passed(test-me-123.txt): '$output_test_me_123_txt'"
 
-          # test listing works
+          # test listing works (HTML)
           curl -v -f http://localhost:80/ || exit 1
-          output_dir_listing=$(curl -s http://localhost:80/)
-          if [[ "$output_dir_listing" != *"test-me-123.txt"* ]]; then
-            echo -e "\nTest failed(dir-listing): $output_dir_listing"
+          output_dir_listing_html=$(curl -s http://localhost:80/)
+          if [[ "$output_dir_listing_html" != *"test-me"* ]]; then
+            echo -e "\nTest failed(dir-listing-html): $output_dir_listing_html"
             exit 1
           fi
-          echo -e "\nTest passed(dir-listing): '$output_dir_listing'"
+          echo -e "\nTest passed(dir-listing-html): '$output_dir_listing_html'"
 
+          # test listing works (API, json)
+          curl -v -f /___api/listing?path=foo_booo || exit 1
+          output_dir_listing_json=$(curl -s /___api/listing?path=foo_booo)
+          if [[ "$output_dir_listing_json" != *"testing-data-file.xml"* ]]; then
+            echo -e "\nTest failed(dir-listing-api-json): $output_dir_listing_json"
+            exit 1
+          fi
+          echo -e "\nTest passed(dir-listing-api-json): '$output_dir_listing_json'"
 
           # openspeedtest upload handler
           curl -v http://localhost:80/openspeedtest/upload
