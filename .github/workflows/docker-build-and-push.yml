@@ -120,11 +120,11 @@ jobs:
       dockerhub_profile: eritikass
       dockerhub_repo: tooling
       get_version_method: git_commit_hash_short
-      platform_linux_arm32v6_enabled: false
-      platform_linux_arm32v7_enabled: false
-      platform_linux_arm64v8_enabled: true
-      platform_linux_amd64_enabled: true
-      platform_linux_i386_enabled: false
+      # platform_linux_arm32v6_enabled: false
+      # platform_linux_arm32v7_enabled: false
+      # platform_linux_arm64v8_enabled: true
+      # platform_linux_amd64_enabled: true
+      # platform_linux_i386_enabled: false
     secrets:
       # ghcr_token: ${{ secrets.GITHUB_TOKEN }}
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -149,11 +149,11 @@ jobs:
       dockerhub_profile: eritikass
       dockerhub_repo: tooling
       get_version_method: git_commit_hash_short
-      platform_linux_arm32v6_enabled: false
-      platform_linux_arm32v7_enabled: false
-      platform_linux_arm64v8_enabled: true
-      platform_linux_amd64_enabled: true
-      platform_linux_i386_enabled: false
+      # platform_linux_arm32v6_enabled: false
+      # platform_linux_arm32v7_enabled: false
+      # platform_linux_arm64v8_enabled: true
+      # platform_linux_amd64_enabled: true
+      # platform_linux_i386_enabled: false
     secrets:
       # ghcr_token: ${{ secrets.GITHUB_TOKEN }}
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
