@@ -57,10 +57,10 @@ jobs:
           docker build -t tooling-image .
           docker images
           # run some test commands
-          docker run --rm -it tooling-image date
-          docker run --rm -it tooling-image sh -c 'uname -m'
-          docker run --rm -it tooling-image bash -c 'gojq --version'
-          docker run --rm -it tooling-image yq_v4 --version
+          docker run --rm tooling-image date
+          docker run --rm tooling-image sh -c 'uname -m'
+          docker run --rm tooling-image bash -c 'gojq --version'
+          docker run --rm tooling-image yq_v4 --version
 
 
   tooling_docker_build_and_push:
