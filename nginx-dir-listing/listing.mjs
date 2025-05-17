@@ -93,7 +93,7 @@ async function getDirContents(dirPath, current_depth) {
         _error: errObj,
         // _fullPath: filePath,
         _relativePath: path.relative(rootPath, filePath),
-        _depth: current_depth,
+        _depth: depthValue > 0 ? current_depth : undefined,
         files: dirFiles,
       });
     })

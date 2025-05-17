@@ -71,12 +71,12 @@ jobs:
 
 
           # test listing works (API w.depth, json)
-          curl -v -f http://localhost:80/___api/listing?path=.&depth=4 || exit 1
-          output_dir_listing_json_depth=$(curl -s http://localhost:80/___api/listing?path=.&depth=4)
+          curl -v -f 'http://localhost:80/___api/listing?path=.&depth=4' || exit 1
+          output_dir_listing_json_depth=$(curl -s 'http://localhost:80/___api/listing?path=.&depth=4')
           echo "$output_dir_listing_json_depth" | jq
 
           if [[ "$output_dir_listing_json_depth" != *"testing-data-file.xml"* ]]; then
-            echo -e "\nTest failed(dir-listing-api-json)[listed.w.depth]: $output_dir_listing_json"
+            echo -e "\nTest failed(dir-listing-api-json)[listed.w.depth]: $output_dir_listing_json_depth"
             exit 1
           fi
           echo -e "\nTest passed(dir-listing-api-json)[listed.w.depth]: '$output_dir_listing_json_depth'"
