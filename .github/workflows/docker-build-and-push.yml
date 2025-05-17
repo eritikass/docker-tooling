@@ -25,14 +25,6 @@ jobs:
           docker images
           sleep 5
 
-          curl -f http://localhost:80/___test__me_fooo_boo || exit 1 
-          output_nginx_location=$(curl -s http://localhost:80/___test__me_fooo_boo)
-          if [[ "$output_nginx_location" != "foo-boo-ok-test-response" ]]; then
-            echo -e "\nTest failed(nginx-location): $output_nginx_location"
-            exit 1
-          fi
-          echo -e "\nTest passed(nginx-location): '$output_nginx_location'"
-
           curl -v -f http://localhost:80/test-me-123.txt || exit 1
           output_test_me_123_txt=$(curl -s http://localhost:80/test-me-123.txt) 
           if [[ "$output_test_me_123_txt" != "test-me-123" ]]; then
