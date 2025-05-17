@@ -81,6 +81,18 @@ jobs:
           fi
           echo -e "\nTest passed(dir-listing-api-json)[listed.w.depth]: '$output_dir_listing_json_depth'"
 
+          # test listing works (API w.depth, json)
+          curl -v -f 'http://localhost:80/___api/hello_world' || exit 1
+          output_api_custom_hello_world=$(curl -s 'http://localhost:80/___api/hello_world')
+          echo "$output_api_custom_hello_world" | jq
+
+          if [[ "$output_api_custom_hello_world" != *"hello world"* ]]; then
+            echo -e "\nTest failed(output_api_custom_hello_world): $output_api_custom_hello_world"
+            exit 1
+          fi
+          echo -e "\nTest passed(output_api_custom_hello_world): '$output_api_custom_hello_world'"
+
+
           # openspeedtest upload handler
           curl -v http://localhost:80/openspeedtest/upload
           curl -f http://localhost:80/openspeedtest/upload || exit 1
@@ -120,11 +132,11 @@ jobs:
       dockerhub_profile: eritikass
       dockerhub_repo: tooling
       get_version_method: git_commit_hash_short
-      # platform_linux_arm32v6_enabled: false
-      # platform_linux_arm32v7_enabled: false
-      # platform_linux_arm64v8_enabled: true
-      # platform_linux_amd64_enabled: true
-      # platform_linux_i386_enabled: false
+      platform_linux_arm32v6_enabled: false
+      platform_linux_arm32v7_enabled: false
+      platform_linux_arm64v8_enabled: true
+      platform_linux_amd64_enabled: true
+      platform_linux_i386_enabled: false
     secrets:
       # ghcr_token: ${{ secrets.GITHUB_TOKEN }}
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -149,11 +161,11 @@ jobs:
       dockerhub_profile: eritikass
       dockerhub_repo: tooling
       get_version_method: git_commit_hash_short
-      # platform_linux_arm32v6_enabled: false
-      # platform_linux_arm32v7_enabled: false
-      # platform_linux_arm64v8_enabled: true
-      # platform_linux_amd64_enabled: true
-      # platform_linux_i386_enabled: false
+      platform_linux_arm32v6_enabled: false
+      platform_linux_arm32v7_enabled: false
+      platform_linux_arm64v8_enabled: true
+      platform_linux_amd64_enabled: true
+      platform_linux_i386_enabled: false
     secrets:
       # ghcr_token: ${{ secrets.GITHUB_TOKEN }}
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}

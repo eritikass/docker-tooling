@@ -2,7 +2,7 @@
 FROM openresty/openresty:alpine
 
 # install node-js 
-RUN apk add --no-cache nodejs \
+RUN apk add --no-cache nodejs bash curl \
     && node --version
 
 # Remove the default nginx index page
@@ -17,7 +17,7 @@ COPY port-80-dir-listing.conf /etc/nginx/conf.d/default.conf
 
 RUN mkdir -p /node-js
 
-COPY listing.mjs /node-js/listing.mjs
+COPY ./node-js/* /node-js/
 
 # Or if you prefer sites-enabled:
 # COPY port-80-dir-listing.conf /etc/nginx/sites-available/my-site.conf
