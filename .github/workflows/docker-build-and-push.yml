@@ -58,16 +58,16 @@ jobs:
           fi
           echo -e "\nTest passed(dir-listing-api-json)[listed]: '$output_dir_listing_json'"
 
-          // check .files["testing-data-file.xml"].isDirectory = false
+          # check .files["testing-data-file.xml"].isDirectory = false
           testingDataFileXml=$(echo "$output_dir_listing_json" | jq -r '.files["testing-data-file.xml"]')
           echo "$testingDataFileXml" | jq
           testingDataFileXmlIsDirectory=$(echo "$testingDataFileXml" | jq -r '.isDirectory')
-          // test if .isDirectory is false
+          # test if .isDirectory is false
           if [[ "$testingDataFileXmlIsDirectory" != "false" ]]; then
             echo -e "\nTest failed(dir-listing-api-json)[isDirectory]: $testingDataFileXmlIsDirectory"
             exit 1
           fi
-          echo -e "\nTest passed(dir-listing-api-json)[isDirectory]: '$output_dir_listing_json'"
+          echo -e "\nTest passed(dir-listing-api-json)[isDirectory]: '$testingDataFileXmlIsDirectory'"
 
           # openspeedtest upload handler
           curl -v http://localhost:80/openspeedtest/upload
